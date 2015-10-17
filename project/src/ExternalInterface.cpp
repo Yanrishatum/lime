@@ -34,6 +34,7 @@
 #include <ui/Joystick.h>
 #include <ui/JoystickEvent.h>
 #include <ui/KeyEvent.h>
+#include <ui/DropEvent.h>
 #include <ui/Mouse.h>
 #include <ui/MouseCursor.h>
 #include <ui/MouseEvent.h>
@@ -883,6 +884,11 @@ namespace lime {
 		
 	}
 	
+  void lime_drop_event_manager_register(value callback, value eventObject)
+  {
+    DropEvent::callback = new AutoGCRoot(callback);
+    DropEvent::eventObject = new AutoGCRoot(eventObject);
+  }
 	
 	value lime_lzma_decode (value buffer) {
 		
@@ -937,7 +943,11 @@ namespace lime {
 		
 	}
 	
-	
+	void lime_mouse_set_capture_mode(bool capture)
+  {
+    Mouse::SetCaptureMode(capture);
+  }
+  
 	void lime_mouse_set_lock (bool lock) {
 		
 		Mouse::SetLock (lock);
@@ -1349,6 +1359,11 @@ namespace lime {
 		
 	}
 	
+  bool lime_window_set_maximized (value window, bool fullscreen)
+  {
+    Window* targetWindow = (Window*)val_data(window);
+    return targetWindow->SetMaximized(fullscreen);
+  }
 	
 	value lime_window_set_title (value window, HxString title) {
 		
@@ -1422,12 +1437,14 @@ namespace lime {
 	DEFINE_PRIME2 (lime_jpeg_decode_bytes);
 	DEFINE_PRIME2 (lime_jpeg_decode_file);
 	DEFINE_PRIME2v (lime_key_event_manager_register);
+	DEFINE_PRIME2v (lime_drop_event_manager_register);
 	DEFINE_PRIME1 (lime_lzma_decode);
 	DEFINE_PRIME1 (lime_lzma_encode);
 	DEFINE_PRIME2v (lime_mouse_event_manager_register);
 	DEFINE_PRIME0v (lime_mouse_hide);
 	DEFINE_PRIME1v (lime_mouse_set_cursor);
 	DEFINE_PRIME1v (lime_mouse_set_lock);
+	DEFINE_PRIME1v (lime_mouse_set_capture_mode);
 	DEFINE_PRIME0v (lime_mouse_show);
 	DEFINE_PRIME3v (lime_mouse_warp);
 	DEFINE_PRIME1v (lime_neko_execute);
@@ -1473,6 +1490,7 @@ namespace lime {
 	DEFINE_PRIME2 (lime_window_set_fullscreen);
 	DEFINE_PRIME2v (lime_window_set_icon);
 	DEFINE_PRIME2 (lime_window_set_minimized);
+	DEFINE_PRIME2 (lime_window_set_maximized);
 	DEFINE_PRIME2 (lime_window_set_title);
 	
 	

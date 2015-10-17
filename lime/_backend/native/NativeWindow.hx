@@ -239,6 +239,17 @@ class NativeWindow {
 	}
 	
 	
+  public function setMaximized (value:Bool):Bool
+  {
+    if (handle != null)
+    {
+      #if !macro
+      return lime_window_set_maximized(handle, value);
+      #end
+    }
+    return value;
+  }
+  
 	public function setMinimized (value:Bool):Bool {
 		
 		if (handle != null) {
@@ -286,6 +297,7 @@ class NativeWindow {
 	@:cffi private static function lime_window_set_fullscreen (handle:Dynamic, fullscreen:Bool):Bool;
 	@:cffi private static function lime_window_set_icon (handle:Dynamic, buffer:Dynamic):Void;
 	@:cffi private static function lime_window_set_minimized (handle:Dynamic, minimized:Bool):Bool;
+	@:cffi private static function lime_window_set_maximized (handle:Dynamic, maximized:Bool):Bool;
 	@:cffi private static function lime_window_set_title (handle:Dynamic, title:String):Dynamic;
 	#end
 	

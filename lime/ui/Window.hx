@@ -26,6 +26,7 @@ class Window {
 	public var height (get, set):Int;
 	public var id (default, null):Int;
 	public var minimized (get, set):Bool;
+	public var maximized (get, set):Bool;
 	public var onActivate = new Event<Void->Void> ();
 	public var onClose = new Event<Void->Void> ();
 	public var onCreate = new Event<Void->Void> ();
@@ -60,6 +61,7 @@ class Window {
 	@:noCompletion private var __fullscreen:Bool;
 	@:noCompletion private var __height:Int;
 	@:noCompletion private var __minimized:Bool;
+	@:noCompletion private var __maximized:Bool;
 	@:noCompletion private var __scale:Float;
 	@:noCompletion private var __title:String;
 	@:noCompletion private var __width:Int;
@@ -356,15 +358,26 @@ class Window {
 	}
 	
 	
+  private inline function get_maximized():Bool
+  {
+    return __maximized;
+  }
+  
+  private inline function set_maximized(value:Bool):Bool
+  {
+    __minimized = false;
+    return __maximized = backend.setMaximized(value);
+  }
+	
 	@:noCompletion private inline function get_minimized ():Bool {
 		
 		return __minimized;
 		
 	}
 	
-	
 	@:noCompletion private function set_minimized (value:Bool):Bool {
 		
+    __maximized = false;
 		return __minimized = backend.setMinimized (value);
 		
 	}

@@ -20,7 +20,7 @@ class Event<T> {
 	@:noCompletion @:dox(hide) public var repeat:Array<Bool>;
 	
 	private var priorities:Array<Int>;
-	
+	public var interrupt:Bool;
 	
 	public function new () {
 		
@@ -55,6 +55,11 @@ class Event<T> {
 		#end
 		
 	}
+  
+  public function stopPropagation():Void
+  {
+    interrupt = true;
+  }
 	
 	
 	#if macro
@@ -132,6 +137,8 @@ class Event<T> {
 			
 			var dispatch = macro {
 				
+        interrupt = false;
+        
 				var listeners = this.listeners;
 				var repeat = this.repeat;
 				var i = 0;
@@ -149,7 +156,7 @@ class Event<T> {
 						i++;
 						
 					}
-					
+					if (interrupt) break;
 				}
 				
 			}
@@ -212,17 +219,17 @@ class Event<T> {
 					//
 					//$ethis.remove (listeners[i]);
 					//
-				//} else {
+				// } else {
 					//
 					//i++;
 					//
-				//}
+				// }
 				//
-			//}
+			// }
 			//
-		//}
+		// }
 		//
-	//}
+	// }
 	
 	
 	public function has (listener:T):Bool {

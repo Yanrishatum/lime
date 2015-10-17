@@ -28,6 +28,8 @@ namespace lime {
 			printf ("Could not initialize SDL: %s.\n", SDL_GetError ());
 			
 		}
+    
+    SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 		
 		currentApplication = this;
 		
@@ -47,6 +49,7 @@ namespace lime {
 		GamepadEvent gamepadEvent;
 		JoystickEvent joystickEvent;
 		KeyEvent keyEvent;
+    DropEvent dropEvent;
 		MouseEvent mouseEvent;
 		RenderEvent renderEvent;
 		SensorEvent sensorEvent;
@@ -197,6 +200,11 @@ namespace lime {
 				ProcessTextEvent (event);
 				break;
 			
+      case SDL_DROPFILE:
+        
+        ProcessDropEvent (event);
+        break;
+      
 			case SDL_WINDOWEVENT:
 				
 				switch (event->window.event) {
@@ -450,6 +458,17 @@ namespace lime {
 		
 	}
 	
+  void SDLApplication::ProcessDropEvent (SDL_Event* event)
+  {
+    if (DropEvent::callback)
+    {
+      dropEvent.type = DROP_FILE;
+      dropEvent.file = event->drop.file;
+      
+      DropEvent::Dispatch(&dropEvent);
+      SDL_free(dropEvent.file);
+    }
+  }
 	
 	void SDLApplication::ProcessKeyEvent (SDL_Event* event) {
 		
