@@ -53,6 +53,7 @@ class NativeApplication {
 	private var touchEventInfo = new TouchEventInfo ();
 	private var unusedTouchesPool = new List<Touch> ();
 	private var windowEventInfo = new WindowEventInfo ();
+	private var mobileEventInfo = new MobileEventInfo();
 	
 	public var handle:Dynamic;
 	
@@ -102,6 +103,7 @@ class NativeApplication {
 		lime_text_event_manager_register (handleTextEvent, textEventInfo);
 		lime_touch_event_manager_register (handleTouchEvent, touchEventInfo);
 		lime_window_event_manager_register (handleWindowEvent, windowEventInfo);
+		lime_mobile_event_manager_register(handleMobileEvent, mobileEventInfo);
 		
 		#if (ios || android || tvos)
 		lime_sensor_event_manager_register (handleSensorEvent, sensorEventInfo);
@@ -179,6 +181,28 @@ class NativeApplication {
 			
 		}
 		
+	}
+	
+	private function handleMobileEvent():Void
+	{
+		#if mobile
+		switch (mobileEventInfo.type)
+		{
+			case TERMINATING:
+				parent.onTermination.dispatch();
+			case LOW_MEMORY:
+				parent.onLowMemory.dispatch();
+			case WILL_ENTER_BACKGROUND:
+				parent.onWillEnterBackground.dispatch();
+			case DID_ENTER_BACKGROUND:
+				parent.onDidEnterBackground.dispatch();
+			case WILL_ENTER_FOREGROUND:
+				parent.onWillEnterForeground.dispatch();
+			case DID_ENTER_FOREGROUND:
+				parent.onDidEnterBackground.dispatch();
+			  
+		}
+		#end
 	}
 	
 	
@@ -640,6 +664,7 @@ class NativeApplication {
 	@:cffi private static function lime_text_event_manager_register (callback:Dynamic, eventObject:Dynamic):Void;
 	@:cffi private static function lime_touch_event_manager_register (callback:Dynamic, eventObject:Dynamic):Void;
 	@:cffi private static function lime_window_event_manager_register (callback:Dynamic, eventObject:Dynamic):Void;
+	@:cffi private static function lime_mobile_event_manager_register(callback:Dynamic, eventObject:Dynamic):Void;
 	#end
 	
 	
@@ -678,6 +703,33 @@ private class ApplicationEventInfo {
 	
 }
 
+
+private class MobileEventInfo 
+{
+	
+	public var type:MobileEventType;
+	
+	public function new(type:MobileEventType = null)
+	{
+		this.type = type;
+	}
+	
+	public function clone():MobileEventInfo
+	{
+		return new MobileEventInfo(this.type);
+	}
+	
+}
+
+@:enum private abstract MobileEventType(Int)
+{
+	var TERMINATING = 0;
+	var LOW_MEMORY = 1;
+	var WILL_ENTER_BACKGROUND = 2;
+	var DID_ENTER_BACKGROUND = 3;
+	var WILL_ENTER_FOREGROUND = 4;
+	var DID_ENTER_FOREGROUND = 5;
+}
 
 private class DropEventInfo {
 	

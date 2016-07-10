@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include <app/Application.h>
 #include <app/ApplicationEvent.h>
+#include <app/MobileEvent.h>
 #include <graphics/RenderEvent.h>
 #include <system/SensorEvent.h>
 #include <ui/DropEvent.h>
@@ -48,6 +49,7 @@ namespace lime {
 			void ProcessTextEvent (SDL_Event* event);
 			void ProcessTouchEvent (SDL_Event* event);
 			void ProcessWindowEvent (SDL_Event* event);
+			int HandleMobileEvent(void *userdata, SDL_Event *event);
 			int WaitEvent (SDL_Event* event);
 			
 			static void UpdateFrame ();
@@ -71,7 +73,7 @@ namespace lime {
 			TextEvent textEvent;
 			TouchEvent touchEvent;
 			WindowEvent windowEvent;
-		
+			MobileEvent mobileEvent;
 	};
 	
 	

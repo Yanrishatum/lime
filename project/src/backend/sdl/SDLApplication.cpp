@@ -56,6 +56,7 @@ namespace lime {
 		TextEvent textEvent;
 		TouchEvent touchEvent;
 		WindowEvent windowEvent;
+		MobileEvent mobileEvent;
 		
 		SDL_EventState (SDL_DROPFILE, SDL_ENABLE);
 		SDLJoystick::Init ();
@@ -87,8 +88,8 @@ namespace lime {
 		
 		Init ();
 		
-		#ifdef EMSCRIPTEN
-		
+		#if (defined(EMSCRIPTEN) || defined(IPHONE))
+		// Iphone requires callback to properly handle GameCenter integration.
 		return 0;
 		
 		#else
@@ -254,9 +255,63 @@ namespace lime {
 		
 	}
 	
-	
+	int SDLApplication::HandleMobileEvent(void *userdata, SDL_Event *event)
+  {
+    switch (event->type)
+    {
+      case SDL_APP_TERMINATING:
+				mobileEvent.type = TERMINATING;
+				MobileEvent::Dispatch(&mobileEvent);
+        
+        return 1; // We pass them for now
+				
+      case SDL_APP_LOWMEMORY:
+
+				mobileEvent.type = LOW_MEMORY;
+				MobileEvent::Dispatch(&mobileEvent);
+
+        return 1;
+				
+      case SDL_APP_WILLENTERBACKGROUND:
+      	
+				mobileEvent.type = WILL_ENTER_BACKGROUND;
+				MobileEvent::Dispatch(&mobileEvent);
+				
+        return 1;
+				
+      case SDL_APP_DIDENTERBACKGROUND:
+			
+				mobileEvent.type = DID_ENTER_BACKGROUND;
+				MobileEvent::Dispatch(&mobileEvent);
+      
+        return 1;
+				
+      case SDL_APP_WILLENTERFOREGROUND:
+      	
+				mobileEvent.type = WILL_ENTER_FOREGROUND;
+				MobileEvent::Dispatch(&mobileEvent);
+				
+        return 1;
+				
+      case SDL_APP_DIDENTERFOREGROUND:
+      
+				mobileEvent.type = DID_ENTER_FOREGROUND;
+				MobileEvent::Dispatch(&mobileEvent);
+			
+        return 1;
+      default:
+        return 1;
+    }
+  }
+  
 	void SDLApplication::Init () {
 		
+    #if IPHONE
+		
+		SDL_FilterEvents(HandleMobileEvent, NULL);
+		
+		#endif
+    
 		active = true;
 		lastUpdate = SDL_GetTicks ();
 		nextUpdate = lastUpdate;

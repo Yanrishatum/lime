@@ -212,6 +212,7 @@
 		</section>
 		
 		<file name="src/app/ApplicationEvent.cpp" />
+		<file name="src/app/MobileEvent.cpp" />
 		<file name="src/audio/format/WAV.cpp" />
 		<file name="src/audio/AudioBuffer.cpp" />
 		<file name="src/graphics/utils/ImageDataUtil.cpp" />

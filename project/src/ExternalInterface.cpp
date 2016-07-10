@@ -11,6 +11,7 @@
 //#include <hx/CFFIPrime.h>
 #include <app/Application.h>
 #include <app/ApplicationEvent.h>
+#include <app/MobileEvent.h>
 #include <audio/format/OGG.h>
 #include <audio/format/WAV.h>
 #include <audio/AudioBuffer.h>
@@ -109,6 +110,12 @@ namespace lime {
 		ApplicationEvent::callback = new AutoGCRoot (callback);
 		ApplicationEvent::eventObject = new AutoGCRoot (eventObject);
 		
+	}
+	
+	void lime_mobile_event_manager_register(value callback, value eventObject)
+	{
+		MobileEvent::callback = new AutoGCRoot(callback);
+		MobileEvent::eventObject = new AutoGCRoot(eventObject);
 	}
 	
 	

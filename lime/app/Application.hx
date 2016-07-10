@@ -35,6 +35,32 @@ class Application extends Module {
 	 */
 	public var onUpdate = new Event<Int->Void> ();
 	
+	#if mobile
+	/** The application is being terminated by the OS. You have to shut down every activity before returning. */
+	public var onTermination = new Event<Void->Void>();
+	/** The application is low on memory, free memory if possible. */
+	public var onLowMemory = new Event<Void->Void>();
+	/** The application is about to enter the background. Prepare your app to go into the background. Stop loops, etc. This gets called when the user hits the home button, or gets a call. */
+	public var onWillEnterBackground = new Event<Void->Void>();
+	/**
+		* This will get called if the user accepted whatever sent your app to the background.
+		* If the user got a phone call and canceled it, you'll instead get an SDL_APP_DIDENTERFOREGROUND event and restart your loops.
+		* When you get this, you have 5 seconds to save all your state or the app will be terminated.
+		* Your app is NOT active at this point.
+    */
+	public var onDidEnterBackground = new Event<Void->Void>();
+	/**
+	 * This call happens when your app is coming back to the foreground.
+   * Restore all your state here.
+	 */
+	public var onWillEnterForeground = new Event<Void->Void>();
+	/**
+	 * Restart your loops here.
+	 * Your app is interactive and getting CPU again.
+	 */
+	public var onDidEnterForeground = new Event<Void->Void>();
+	#end
+	
 	public var renderer (get, null):Renderer;
 	public var renderers (get, null):Array<Renderer>;
 	public var window (get, null):Window;
