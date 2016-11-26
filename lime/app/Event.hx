@@ -164,6 +164,31 @@ class Event<T> {
 				
 			}
 			
+			if (Context.defined("crashdumper")) {
+				
+				dispatch = macro {
+					
+					if (crashdumper.CrashDumper.active) {
+						
+						try {
+							
+							$e{dispatch} 
+							
+						}catch (msg:Dynamic) {
+							
+							Application.__catchError(msg); 
+							
+						}
+						
+					}
+					else {
+						
+						$e{dispatch}
+						
+					}
+				}
+				
+			}
 			var i = 0;
 			var field;
 			

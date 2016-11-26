@@ -43,6 +43,18 @@ class Application extends Module {
 	@:noCompletion private var backend:ApplicationBackend;
 	@:noCompletion private var windowByID:Map<Int, Window>;
 	
+  #if crashdumper
+	public static var dispatchErrorEventCallback:Dynamic->Void = null;
+	public static function __catchError(msg:Dynamic) {
+		
+		if (Application.dispatchErrorEventCallback != null) {
+			
+			Application.dispatchErrorEventCallback(msg);
+			
+		}
+		
+	}
+  #end
 	
 	public function new () {
 		

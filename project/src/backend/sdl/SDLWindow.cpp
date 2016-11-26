@@ -303,7 +303,7 @@ namespace lime {
 		
 		if (fullscreen) {
 			
-			SDL_SetWindowFullscreen (sdlWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+			SDL_SetWindowFullscreen (sdlWindow, SDL_WINDOW_FULLSCREEN);
 			
 		} else {
 			
